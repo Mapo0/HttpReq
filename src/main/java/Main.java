@@ -64,10 +64,21 @@ public class Main {
         return methods;
     }
 
-    public URL getReqWithParam() throws MalformedURLException, UnsupportedEncodingException {
+    public URL getReqWithParam() throws IOException {
         String addressRu = "Ижевск, С.Ковалевской 12";
         String address = URLEncoder.encode(addressRu, "UTF-8");
         URL url2 = new URL("https://yandex.ru/maps?text=" + address + "&lang=ru_RU&csrfToken=" + csrfToken);
+
+         HttpGet httpGet = new HttpGet(String.valueOf(url2));
+         CloseableHttpResponse response = client.execute(httpGet);
+        BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        String inputLine = "";
+        StringBuffer result = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            result.append(inputLine);
+            result.append("\n");
+            System.out.println(inputLine);
+        }
         return url2;
 
     }
